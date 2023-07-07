@@ -1,0 +1,55 @@
+import React, { useState } from "react";
+import TodoItem from "./TodoItem";
+import AddTodo from "./AddTodo";
+
+export const TodoParent = () => {
+  const startingState = [
+    { id: 1, title: "go out", completed: false },
+    { id: 2, title: "Go home", completed: false },
+    { id: 3, title: "Apple sauce", completed: false },
+  ];
+
+  const [todoArray, setTodoArray] = useState(startingState);
+
+  const markComplete = (id) => {
+    console.log("Toggling item " + id);
+
+    const newArrayOfTodoItems = todoArray.map((todo) => {
+      if (todo.id === id) {
+        todo = { ...todo, completed: !todo.completed };
+      }
+      return todo;
+    });
+
+    setTodoArray(newArrayOfTodoItems);
+  };
+
+  const addTodo = (newTitle) => {
+    console.log("addTodo: " + newTitle);
+
+    const nextIdNumber = todoArray.length + 1;
+    const newTodo = { id: nextIdNumber, title: newTitle, completed: false };
+    const newTodoArray = [...todoArray, newTodo];
+
+    newTodoArray.sort((a, b) => a.title.localeCompare(b.title));
+
+    setTodoArray(newTodoArray);
+  };
+
+  const makeOneTodoItem = (prop) => (
+    <TodoItem
+      key={prop.id}
+      todo={prop}
+      markComplete={markComplete}
+    />
+  );
+
+  return (
+    <div>
+      {todoArray.map(makeOneTodoItem)}
+      <AddTodo addTodoItem={addTodo} />
+    </div>
+  );
+};
+
+export default TodoParent;
